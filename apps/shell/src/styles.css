@@ -1,0 +1,107 @@
+/* Shell styles. Plain CSS on purpose: the shell must not load any UI library. */
+
+:root {
+  --bg: #0f1115;
+  --panel: #171a21;
+  --line: #2a2f3a;
+  --text: #e8eaf0;
+  --muted: #9aa3b2;
+  --accent: #e5b84b;
+  --stage: #0b0d11;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  font: 14px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+.shell { display: flex; flex-direction: column; height: 100%; }
+
+.shell-header {
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  padding: 12px 20px; background: var(--panel); border-bottom: 1px solid var(--line);
+}
+.shell-brand { display: flex; align-items: center; gap: 10px; }
+.shell-logo { font-size: 26px; color: var(--accent); }
+.shell-brand h1 { margin: 0; font-size: 18px; letter-spacing: 0.02em; }
+.shell-brand p { margin: 0; color: var(--muted); font-size: 12px; }
+
+button, select { font: inherit; color: inherit; }
+button:focus-visible, select:focus-visible, a:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+
+.lib-switcher {
+  display: flex; gap: 4px; padding: 4px; border-radius: 10px; background: var(--bg);
+  overflow-x: auto; scrollbar-width: none;
+}
+.lib-switcher button, .segmented button {
+  min-height: 36px; padding: 0 14px; border: 0; border-radius: 7px;
+  background: transparent; color: var(--muted); cursor: pointer; white-space: nowrap;
+}
+.lib-switcher button:hover, .segmented button:hover { color: var(--text); }
+.lib-switcher button[aria-pressed='true'], .segmented button[aria-pressed='true'] {
+  background: var(--accent); color: #1a1405; font-weight: 600;
+}
+
+.shell-controls { display: flex; gap: 10px; align-items: center; margin-left: auto; }
+.segmented { display: flex; gap: 2px; padding: 3px; border-radius: 9px; background: var(--bg); }
+.device-picker select {
+  min-height: 38px; padding: 0 10px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--bg);
+}
+
+.shell-meta {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding: 8px 20px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 13px;
+}
+.badges { display: flex; gap: 8px; flex-wrap: wrap; margin: 0; padding: 0; list-style: none; }
+.badges li { padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; }
+.badges b { color: var(--text); }
+.shell-source { margin-left: auto; color: var(--accent); }
+
+.shell-stage {
+  flex: 1; min-height: 0; display: flex; gap: 20px; padding: 20px; background: var(--stage);
+}
+.shell-stage[data-view='mobile'] { justify-content: center; }
+
+.frame-desktop { flex: 1; min-width: 0; display: flex; }
+.frame-desktop iframe {
+  flex: 1; width: 100%; height: 100%; border: 1px solid var(--line); border-radius: 10px;
+  background: #fff;
+}
+
+.frame-phone-slot {
+  flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; height: 100%;
+}
+.frame-phone-size { position: relative; }
+.frame-phone {
+  position: absolute; top: 0; left: 0; transform-origin: top left;
+  border-radius: 48px; background: #000; box-shadow: 0 0 0 2px #3a3f4b, 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+.frame-phone[data-os='Android'] { border-radius: 34px; }
+.frame-phone iframe {
+  display: block; border: 0; border-radius: 36px; background: #fff;
+}
+.frame-phone[data-os='Android'] iframe { border-radius: 24px; }
+.frame-phone-label { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
+
+/* On a real phone the shell shows only the mobile view, full width, no bezel. */
+.shell[data-phone] .shell-header { gap: 10px; padding: 10px 12px; }
+.shell[data-phone] .lib-switcher { width: 100%; }
+.shell[data-phone] .lib-switcher button { min-height: 44px; }
+.shell[data-phone] .shell-meta { padding: 6px 12px; }
+.shell[data-phone] .shell-source { margin-left: 0; }
+.shell[data-phone] .shell-stage { padding: 0; }
+.frame-native { flex: 1; display: flex; }
+.frame-native iframe { flex: 1; width: 100%; height: 100%; border: 0; background: #fff; }
