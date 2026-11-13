@@ -17,7 +17,8 @@ packages/ui-*       one package per library implementing the contract
 scripts/measure     gzipped bundle size, lines of code, hand-built count -> stats.json
 ```
 
-Only `packages/shared` exists so far; the rest lands step by step.
+So far: `packages/shared`, the shell, and stand-in library pages. The real
+library versions land step by step.
 
 ## Develop
 
@@ -25,6 +26,14 @@ Requires Node 22 and pnpm 10.
 
 ```sh
 pnpm install
+pnpm dev          # shell on http://localhost:5173, library pages proxied from :5174
+pnpm lint
 pnpm typecheck
 pnpm test
+pnpm build        # shell and all library pages into dist/
+pnpm e2e          # Playwright against the built site
 ```
+
+The shell keeps its state in the URL, e.g.
+`/?lib=mui&tab=rivals&view=both&device=pixel-10`. The phone picker lists five
+iPhones and five Android phones; sizes are in `apps/shell/src/devices.ts`.

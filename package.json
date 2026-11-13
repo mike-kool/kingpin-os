@@ -5,10 +5,21 @@
   "packageManager": "pnpm@10.28.0",
   "engines": { "node": ">=22" },
   "scripts": {
+    "dev": "pnpm --parallel --filter @kingpin/shell --filter @kingpin/showcase dev",
+    "build": "pnpm --filter @kingpin/shell build && pnpm --filter @kingpin/showcase build",
+    "preview": "pnpm --filter @kingpin/shell preview",
     "typecheck": "pnpm -r typecheck",
-    "test": "pnpm -r test"
+    "lint": "eslint .",
+    "test": "pnpm -r test",
+    "e2e": "playwright test"
   },
   "devDependencies": {
-    "typescript": "^5.9.0"
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.1",
+    "eslint": "^10.15.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.72.2"
   }
 }
