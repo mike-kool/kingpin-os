@@ -1,0 +1,27 @@
+/* Layout for the Kingpin OS page. Grid and spacing only, so every library's
+   own look shows through. The mobile breakpoint is 640px everywhere. */
+
+.kp-page { display: flex; flex-direction: column; gap: 24px; padding: 24px; max-width: 1280px; margin: 0 auto; }
+.kp-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.kp-title { margin: 0; font-size: 1.5rem; font-weight: 700; line-height: 1.2; }
+.kp-subtitle { margin: 4px 0 0; opacity: 0.7; font-size: 0.875rem; }
+.kp-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.kp-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.kp-columns { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; align-items: start; }
+.kp-main, .kp-side { min-width: 0; }
+.kp-section-title { margin: 0 0 12px; font-size: 1.125rem; font-weight: 600; }
+.kp-form { display: flex; flex-direction: column; gap: 16px; }
+.kp-form-actions { display: flex; justify-content: flex-end; }
+
+@media (max-width: 1023px) {
+  .kp-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kp-columns { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 639px) {
+  .kp-page { padding: 16px; gap: 20px; }
+  .kp-stats { gap: 12px; }
+  .kp-actions { width: 100%; }
+  .kp-actions > * { flex: 1; }
+  .kp-form-actions > * { width: 100%; }
+}

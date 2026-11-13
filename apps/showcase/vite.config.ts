@@ -2,6 +2,7 @@ import { existsSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 // One HTML entry per library, so each iframe loads only that library's
 // provider, reset and CSS, and the build reports exact per-library sizes.
@@ -15,7 +16,9 @@ const entries = Object.fromEntries(
 );
 
 export default defineConfig(({ command }) => ({
-  plugins: [react()],
+  // Tailwind only processes CSS files that import it, so libraries that don't
+  // use Tailwind are unaffected.
+  plugins: [react(), tailwindcss()],
   base: command === 'serve' ? '/__showcase/' : '/',
   server: { port: 5174, strictPort: true },
   build: {
