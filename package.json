@@ -14,7 +14,8 @@
     "lint": "eslint .",
     "test": "pnpm -r test",
     "e2e": "playwright test",
-    "measure": "pnpm --filter @kingpin/measure measure"
+    "measure": "pnpm --filter @kingpin/measure measure",
+    "deploy": "pnpm build && wrangler deploy"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -23,6 +24,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.14.0",
     "typescript": "^5.9.0",
-    "typescript-eslint": "^8.72.2"
+    "typescript-eslint": "^8.72.2",
+    "wrangler": "^4.162.0"
   }
 }

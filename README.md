@@ -46,6 +46,28 @@ pnpm build && pnpm preview
 npx lighthouse http://localhost:4173/ --view
 ```
 
+## Deploy
+
+The site is static and runs on Cloudflare Workers static assets
+(`wrangler.jsonc`), with no Worker script. The `Deploy` GitHub workflow:
+
+- deploys `main` to production on every push, and
+- uploads a preview for every pull request from this repo, at
+  `pr-<number>-kingpin-os.<your-subdomain>.workers.dev`. The URL is in the
+  job summary.
+
+It needs two repository secrets, set under Settings → Secrets and variables
+→ Actions:
+
+- `CLOUDFLARE_API_TOKEN`: a Cloudflare API token made from the "Edit
+  Cloudflare Workers" template.
+- `CLOUDFLARE_ACCOUNT_ID`: shown on the Cloudflare dashboard's Workers
+  overview.
+
+Until they are set, the workflow skips the deploy and says so. To deploy by
+hand, run `pnpm wrangler login` and then `pnpm deploy`. To serve the built
+site the way Cloudflare will, run `pnpm build && pnpm wrangler dev`.
+
 ## Develop
 
 Requires Node 22 and pnpm 10.
