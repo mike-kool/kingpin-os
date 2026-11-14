@@ -1,0 +1,20 @@
+/* DaisyUI 5 on Tailwind v4: the default light theme, untouched. Loaded only
+   by the DaisyUI page, so its Tailwind build sees only these sources. */
+
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default;
+}
+@import "@kingpin/page/page.css";
+
+@source "./";
+@source "../../page/src/";
+
+/* DaisyUI sizes controls from --size-field (40px at the default). On phones,
+   raise it so buttons, inputs, selects and tabs are 44px. */
+@media (width < 48rem) {
+  :root,
+  [data-theme] {
+    --size-field: 0.275rem;
+  }
+}

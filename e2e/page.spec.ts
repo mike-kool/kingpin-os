@@ -3,10 +3,14 @@
 
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
-const LIBS = ['shadcn', 'mui'] as const;
+const LIBS = ['shadcn', 'mui', 'mantine', 'chakra', 'heroui', 'daisyui'] as const;
 
 async function pickOption(page: Page, label: string, option: string) {
-  const field = page.getByLabel(label);
+  // Some libraries label their listbox too, so target the combobox itself.
+  // React Aria's select trigger is a button labelled by its value and label.
+  const field = page
+    .getByRole('combobox', { name: label, exact: true })
+    .or(page.locator('form').getByRole('button', { name: new RegExp(label) }));
   if ((await field.evaluate((el) => el.tagName)) === 'SELECT') {
     await field.selectOption({ label: option });
   } else {
@@ -40,14 +44,14 @@ for (const lib of LIBS) {
       await expect(page.getByText('Every lieutenant needs a codename.')).toBeVisible();
       await expect(page.getByText('An alibi is required. Obviously.')).toBeVisible();
 
-      await page.getByLabel('Codename').fill('Waffles Wallace');
+      await page.getByRole('textbox', { name: 'Codename' }).fill('Waffles Wallace');
       await pickOption(page, 'Territory', 'Waffle Iron District');
       await pickOption(page, 'Product line', 'Smuggled Croissants (KP-SMC-002)');
-      await page.getByLabel('Alibi').fill('Too short');
+      await page.getByRole('textbox', { name: 'Alibi' }).fill('Too short');
       await page.getByRole('button', { name: 'Recruit', exact: true }).click();
       await expect(page.getByText(/too thin/i)).toBeVisible();
 
-      await page.getByLabel('Alibi').fill('I was at the knitting circle all night, ask anyone.');
+      await page.getByRole('textbox', { name: 'Alibi' }).fill('I was at the knitting circle all night, ask anyone.');
       await page.getByRole('button', { name: 'Recruit', exact: true }).click();
       await expect(page.getByText('Lieutenant recruited')).toBeVisible();
       await expect(visibleText(page, 'Waffles Wallace')).toBeVisible();

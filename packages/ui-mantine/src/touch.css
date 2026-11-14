@@ -1,0 +1,11 @@
+/* Mantine's "md" controls are 42px tall. On phones, lift inputs and
+   buttons to 44px so every touch target meets the 44px minimum.
+   The size variables live on each component, so set them there. */
+@media (max-width: 47.99em) {
+  .mantine-Input-wrapper {
+    --input-height-md: 2.75rem;
+  }
+  .mantine-Button-root {
+    --button-height-md: 2.75rem;
+  }
+}

@@ -17,9 +17,8 @@ packages/ui-*       one package per library implementing the contract
 scripts/measure     gzipped bundle size, lines of code, hand-built count -> stats.json
 ```
 
-So far: `packages/shared`, `packages/page`, the shell, and the shadcn/ui
-version (`packages/ui-shadcn`). The other five libraries show stand-in pages
-until their kits land.
+All six libraries are in: `packages/ui-shadcn`, `ui-mui`, `ui-mantine`,
+`ui-chakra`, `ui-heroui` and `ui-daisyui`.
 
 ## Adding a library
 

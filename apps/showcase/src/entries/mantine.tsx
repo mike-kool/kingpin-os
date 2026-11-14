@@ -1,4 +1,13 @@
-// Placeholder until the Mantine kit lands; replaced in a later step.
-import { mountPlaceholder } from '../placeholder/mount';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { KingpinPage } from '@kingpin/page';
+import { Kit, KitProvider } from '@kingpin/ui-mantine';
+import '@kingpin/page/page.css';
 
-mountPlaceholder('mantine');
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <KitProvider>
+      <KingpinPage kit={Kit} />
+    </KitProvider>
+  </StrictMode>,
+);
