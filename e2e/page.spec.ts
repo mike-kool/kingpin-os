@@ -3,7 +3,7 @@
 
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
-const LIBS = ['shadcn'] as const;
+const LIBS = ['shadcn', 'mui'] as const;
 
 async function pickOption(page: Page, label: string, option: string) {
   const field = page.getByLabel(label);
