@@ -1,0 +1,13 @@
+// Cloudflare Workers static assets: the whole site is the built dist/ folder.
+// No Worker script; Cloudflare serves the files directly.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "kingpin-os",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    // /mui/ serves dist/mui/index.html; /mui redirects to /mui/.
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}
