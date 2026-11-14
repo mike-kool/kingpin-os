@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { LIBRARIES, isPageToShell, type LibraryId, type ShellToPage, type TabId } from '@kingpin/shared';
 import { DEVICES, findDevice, type Device } from './devices';
+import { Fab } from './Fab';
 import { formatKb, useStats, type LibraryStats } from './stats';
 import {
   pageUrl,
@@ -72,34 +73,71 @@ export function App() {
   }, [update]);
 
   const libName = LIBRARIES.find((l) => l.id === state.lib)?.name ?? state.lib;
+  // The library's page by itself, with no shell around it.
+  const standaloneUrl = pageUrl(state.lib, state.tab);
 
   return (
     <div className="shell" data-phone={isPhone || undefined}>
-      <header className="shell-header">
-        <div className="shell-brand">
-          <span className="shell-logo" aria-hidden="true">♛</span>
-          <div>
-            <h1>Kingpin OS</h1>
-            <p>One app, six UI libraries</p>
-          </div>
-        </div>
-
-        <LibrarySwitcher value={state.lib} onChange={(lib) => update({ lib })} />
-
-        <div className="shell-controls">
-          {!isPhone && <ViewToggle value={state.view} onChange={(v) => update({ view: v })} />}
-          {!isPhone && view !== 'desktop' && (
-            <DevicePicker value={device.id} onChange={(id) => update({ device: id })} />
+      {isPhone ? (
+        // On a phone the page gets the whole screen; the shell is a small
+        // draggable tab that opens this menu.
+        <Fab label="Kingpin OS menu">
+          {(close) => (
+            <>
+              <h1 className="fab-title">
+                <span aria-hidden="true">♛</span> Kingpin OS
+              </h1>
+              <LibrarySwitcher
+                value={state.lib}
+                onChange={(lib) => {
+                  update({ lib });
+                  close();
+                }}
+              />
+              <Badges stats={libStats} statsReady={stats !== null} />
+              <div className="fab-links">
+                <a href={standaloneUrl} target="_blank" rel="noreferrer">
+                  Open {libName} on its own
+                </a>
+                <a href={sourceUrl(state.lib)} target="_blank" rel="noreferrer">
+                  View source
+                </a>
+              </div>
+            </>
           )}
-        </div>
-      </header>
+        </Fab>
+      ) : (
+        <>
+          <header className="shell-header">
+            <div className="shell-brand">
+              <span className="shell-logo" aria-hidden="true">♛</span>
+              <div>
+                <h1>Kingpin OS</h1>
+                <p>One app, six UI libraries</p>
+              </div>
+            </div>
 
-      <div className="shell-meta">
-        <Badges stats={libStats} statsReady={stats !== null} />
-        <a className="shell-source" href={sourceUrl(state.lib)} target="_blank" rel="noreferrer">
-          View {libName} source
-        </a>
-      </div>
+            <LibrarySwitcher value={state.lib} onChange={(lib) => update({ lib })} />
+
+            <div className="shell-controls">
+              <ViewToggle value={state.view} onChange={(v) => update({ view: v })} />
+              {view !== 'desktop' && <DevicePicker value={device.id} onChange={(id) => update({ device: id })} />}
+            </div>
+          </header>
+
+          <div className="shell-meta">
+            <Badges stats={libStats} statsReady={stats !== null} />
+            <div className="shell-links">
+              <a href={standaloneUrl} target="_blank" rel="noreferrer">
+                Open {libName} on its own
+              </a>
+              <a href={sourceUrl(state.lib)} target="_blank" rel="noreferrer">
+                View {libName} source
+              </a>
+            </div>
+          </div>
+        </>
+      )}
 
       <main className="shell-stage" data-view={view}>
         {view !== 'mobile' && (
@@ -143,8 +181,15 @@ export function App() {
 }
 
 function LibrarySwitcher({ value, onChange }: { value: LibraryId; onChange: (lib: LibraryId) => void }) {
+  const ref = useRef<HTMLElement>(null);
+  // On phones the row scrolls sideways, so keep the selected library in view.
+  useEffect(() => {
+    ref.current
+      ?.querySelector('[aria-pressed="true"]')
+      ?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }, [value]);
   return (
-    <nav className="lib-switcher" aria-label="UI library">
+    <nav className="lib-switcher" aria-label="UI library" ref={ref}>
       {LIBRARIES.map((lib) => (
         <button
           key={lib.id}
