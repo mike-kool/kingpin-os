@@ -87,6 +87,54 @@ test.describe('shell on a real phone', () => {
   });
 });
 
+test.describe('floating menu on a real phone', () => {
+  test.skip(({ isMobile }) => !isMobile, 'phone only');
+
+  test('the page fills the screen and the menu switches library', async ({ page }) => {
+    await page.goto('/?lib=shadcn');
+    const frameBox = (await page.getByTestId('frame-mobile').boundingBox())!;
+    expect(frameBox.y).toBe(0);
+    expect(frameBox.height).toBe(page.viewportSize()!.height);
+
+    const fab = page.getByRole('button', { name: 'Kingpin OS menu' });
+    const fabBox = (await fab.boundingBox())!;
+    expect(fabBox.height).toBe(44);
+    // Docked on the right edge, partly off screen.
+    expect(fabBox.x + fabBox.width).toBeGreaterThan(page.viewportSize()!.width);
+
+    await fab.click();
+    const menu = page.getByRole('dialog', { name: 'Kingpin OS menu' });
+    await expect(menu.getByTestId('badges')).toContainText('lines of code');
+    await expect(menu.getByRole('link', { name: 'Open shadcn/ui on its own' })).toHaveAttribute(
+      'href',
+      /\/shadcn\/\?tab=operations$/,
+    );
+    await menu.getByRole('button', { name: 'HeroUI', exact: true }).click();
+    await expect(menu).toBeHidden();
+    await expect(page).toHaveURL(/lib=heroui/);
+    await expect(page.getByTestId('frame-mobile')).toHaveAttribute('src', /\/heroui\//);
+  });
+
+  test('the tab drags to the other edge and stays there', async ({ page }) => {
+    await page.goto('/');
+    const fab = page.getByRole('button', { name: 'Kingpin OS menu' });
+    const box = (await fab.boundingBox())!;
+    await page.mouse.move(box.x + 10, box.y + 22);
+    await page.mouse.down();
+    await page.mouse.move(200, 300, { steps: 5 });
+    await page.mouse.move(40, 150, { steps: 5 });
+    await page.mouse.up();
+    await expect(fab).toHaveAttribute('data-side', 'left');
+    await expect(page.getByRole('dialog')).toHaveCount(0); // a drag is not a tap
+    const moved = (await fab.boundingBox())!;
+    expect(moved.x).toBeLessThan(0);
+    expect(Math.abs(moved.y - 128)).toBeLessThan(30);
+
+    await page.reload();
+    await expect(page.getByRole('button', { name: 'Kingpin OS menu' })).toHaveAttribute('data-side', 'left');
+  });
+});
+
 test.describe('stats badges', () => {
   test.skip(({ isMobile }) => isMobile, 'desktop only');
 

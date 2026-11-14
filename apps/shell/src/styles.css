@@ -68,7 +68,8 @@ button:focus-visible, select:focus-visible, a:focus-visible {
 .badges { display: flex; gap: 8px; flex-wrap: wrap; margin: 0; padding: 0; list-style: none; }
 .badges li { padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; }
 .badges b { color: var(--text); }
-.shell-source { margin-left: auto; color: var(--accent); }
+.shell-links { margin-left: auto; display: flex; gap: 16px; }
+.shell-links a, .fab-links a { color: var(--accent); }
 
 .shell-stage {
   flex: 1; min-height: 0; display: flex; gap: 20px; padding: 20px; background: var(--stage);
@@ -96,13 +97,45 @@ button:focus-visible, select:focus-visible, a:focus-visible {
 .frame-phone[data-os='Android'] iframe { border-radius: 24px; }
 .frame-phone-label { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
 
-/* On a real phone the shell shows only the mobile view, full width, no bezel. */
-.shell[data-phone] .shell-header { gap: 10px; padding: 10px 12px; }
-.shell[data-phone] .lib-switcher { width: 100%; }
-.shell[data-phone] .lib-switcher button { min-height: 44px; }
-.shell[data-phone] .shell-meta { padding: 6px 12px; }
-.shell[data-phone] .shell-source { margin-left: 0; }
+/* On a real phone the page fills the screen and the shell is a small tab on
+   one edge (see Fab.tsx). */
 .shell[data-phone] .shell-stage { padding: 0; }
+
+.fab {
+  position: fixed; z-index: 20; width: 44px; height: 44px; padding: 0;
+  display: grid; place-items: center; border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--panel) 88%, transparent); color: var(--accent);
+  font-size: 20px; line-height: 1; cursor: grab; touch-action: none; user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35); backdrop-filter: blur(6px);
+  transition: top 0.2s ease, opacity 0.2s ease; opacity: 0.85;
+}
+/* Docked, a third of the tab sits off screen so it stays out of the way. */
+.fab[data-side='right'] { right: -14px; padding-right: 14px; border-radius: 22px 0 0 22px; }
+.fab[data-side='left'] { left: -14px; padding-left: 14px; border-radius: 0 22px 22px 0; }
+.fab[aria-expanded='true'], .fab[data-dragging] { opacity: 1; }
+.fab[data-dragging] {
+  right: auto; padding: 0; border-radius: 22px; cursor: grabbing; transition: none;
+}
+
+.fab-backdrop { position: fixed; inset: 0; z-index: 19; background: rgba(0, 0, 0, 0.35); }
+.fab-menu {
+  position: fixed; z-index: 21; width: min(260px, calc(100vw - 60px));
+  max-height: calc(100vh - 16px); overflow-y: auto;
+  display: flex; flex-direction: column; gap: 10px; padding: 12px;
+  border: 1px solid var(--line); border-radius: 14px; background: var(--panel);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); font-size: 13px;
+}
+.fab-menu[data-side='right'] { right: 38px; }
+.fab-menu[data-side='left'] { left: 38px; }
+.fab-title { margin: 0; font-size: 15px; }
+.fab-title span { color: var(--accent); }
+.fab-menu .lib-switcher { display: grid; grid-template-columns: 1fr 1fr; overflow: visible; }
+.fab-menu .lib-switcher button { min-height: 44px; padding: 0 8px; }
+.fab-menu .badges { color: var(--muted); gap: 6px; }
+.fab-menu .badges li { padding: 2px 8px; }
+.fab-links { display: flex; flex-direction: column; }
+.fab-links a { min-height: 44px; display: flex; align-items: center; }
 .frame-native { flex: 1; display: flex; }
 .frame-native iframe { flex: 1; width: 100%; height: 100%; border: 0; background: #fff; }
 
