@@ -90,26 +90,22 @@ test.describe('shell on a real phone', () => {
 test.describe('stats badges', () => {
   test.skip(({ isMobile }) => isMobile, 'desktop only');
 
-  test('show build-time numbers for a built library and a note for stand-ins', async ({ page, request }) => {
+  test('show build-time numbers for every library', async ({ page, request }) => {
     const stats = await (await request.get('/stats.json')).json();
-    const shadcn = stats.libraries.shadcn;
-    expect(shadcn.jsGzip).toBeGreaterThan(0);
-    expect(shadcn.handBuilt + shadcn.fromLibrary).toBe(12);
-
-    await page.goto('/?lib=shadcn');
-    const badges = page.getByTestId('badges');
-    await expect(badges).toContainText(`${(shadcn.jsGzip / 1024).toFixed(1)} KB`);
-    await expect(badges).toContainText(`${shadcn.linesOfCode.toLocaleString('en-US')} lines of code`);
-    await expect(badges).toContainText(`${shadcn.fromLibrary} from library`);
-
-    // A library without a kit yet shows a note instead of numbers.
     const names: Record<string, string> = {
-      mui: 'MUI', mantine: 'Mantine', chakra: 'Chakra UI', daisyui: 'DaisyUI', heroui: 'HeroUI',
+      shadcn: 'shadcn/ui', mui: 'MUI', mantine: 'Mantine', chakra: 'Chakra UI', daisyui: 'DaisyUI', heroui: 'HeroUI',
     };
-    const standIn = Object.keys(names).find((id) => !stats.libraries[id]);
-    test.skip(!standIn, 'every library is built');
-    await page.getByRole('button', { name: names[standIn!], exact: true }).click();
-    await expect(page.getByTestId('badges')).toHaveCount(0);
-    await expect(page.getByTestId('badges-empty')).toContainText('still a stand-in');
+    await page.goto('/');
+    for (const [id, name] of Object.entries(names)) {
+      const lib = stats.libraries[id];
+      expect(lib.jsGzip, id).toBeGreaterThan(0);
+      expect(lib.handBuilt + lib.fromLibrary, id).toBe(12);
+
+      await page.getByRole('button', { name, exact: true }).click();
+      const badges = page.getByTestId('badges');
+      await expect(badges).toContainText(`${(lib.jsGzip / 1024).toFixed(1)} KB`);
+      await expect(badges).toContainText(`${lib.linesOfCode.toLocaleString('en-US')} lines of code`);
+      await expect(badges).toContainText(`${lib.fromLibrary} from library`);
+    }
   });
 });
