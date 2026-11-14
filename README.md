@@ -30,6 +30,22 @@ All six libraries are in: `packages/ui-shadcn`, `ui-mui`, `ui-mantine`,
 3. Add the id to `LIBS` in `e2e/page.spec.ts`; the shared behavior tests then
    run against it at desktop and phone sizes.
 
+## Mobile and performance checks
+
+`pnpm e2e` checks the mobile rules for every library on a phone viewport:
+the nav becomes a drawer, the table becomes cards, the form is one column,
+the modal is full width, and touch targets are at least 44px.
+`e2e/screenshots.spec.ts` also saves each page at 390px and 1280px (plus
+the open drawer and modal on the phone) to `screenshots/`. CI uploads those
+as the `screenshots` artifact.
+
+To run Lighthouse on the shell against the production build:
+
+```sh
+pnpm build && pnpm preview
+npx lighthouse http://localhost:4173/ --view
+```
+
 ## Develop
 
 Requires Node 22 and pnpm 10.
