@@ -3,7 +3,7 @@
 
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
-const LIBS = ['shadcn', 'mui', 'mantine', 'chakra', 'heroui', 'daisyui'] as const;
+const LIBS = ['shadcn', 'mui', 'mantine', 'chakra', 'heroui', 'daisyui', 'custom'] as const;
 
 async function pickOption(page: Page, label: string, option: string) {
   // Some libraries label their listbox too, so target the combobox itself.

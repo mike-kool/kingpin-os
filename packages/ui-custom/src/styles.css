@@ -1,0 +1,445 @@
+/* The whole look of the kit, in one file with no build step of its own.
+   Everything sits in the "kingpin" cascade layer, so any style you write
+   outside a layer wins without a specificity fight. To re-theme, override
+   the --k-* tokens on :root or on any subtree. */
+
+@layer kingpin {
+  /* Tokens. Each color is a light and dark pair: with no data-theme on
+     <html> the system setting picks; data-theme="light" or "dark" forces. */
+  :root {
+    color-scheme: light dark;
+    --k-bg: light-dark(#f5f5f8, #0d0d11);
+    --k-surface: light-dark(#fff, #17171d);
+    --k-sunken: light-dark(#f0f0f4, #20202a);
+    --k-border: light-dark(#e2e2e9, #2c2c38);
+    /* Control outlines: 3:1 against the surface, as WCAG asks. */
+    --k-border-strong: light-dark(#8a8a99, #6e6e80);
+    --k-text: light-dark(#16161d, #ededf2);
+    --k-muted: light-dark(#5a5a69, #a5a5b5);
+    --k-accent: light-dark(#4f3ff0, #9388ff);
+    --k-on-accent: light-dark(#fff, #0d0d11);
+    --k-success: light-dark(#127a39, #4ade80);
+    --k-warning: light-dark(#9a5700, #fbbf24);
+    --k-danger: light-dark(#c2212b, #ff7b7b);
+    --k-info: light-dark(#1a62c4, #6cb2ff);
+    --k-shadow: light-dark(rgb(22 22 45 / 0.08), rgb(0 0 0 / 0.5));
+    --k-scrim: rgb(10 10 20 / 0.5);
+    --k-radius: 0.625rem;
+    --k-control: 2.5rem;
+    --k-day: 2.25rem;
+    --k-font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --k-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  :root[data-theme='light'] { color-scheme: light; }
+  :root[data-theme='dark'] { color-scheme: dark; }
+
+  /* On a phone every control is a 44px touch target. */
+  @media (max-width: 767px) {
+    :root { --k-control: 2.75rem; --k-day: 2.75rem; }
+    .k-desktop { display: none !important; }
+  }
+  @media (min-width: 768px) {
+    .k-phone { display: none !important; }
+  }
+
+  /* Base */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scrollbar-gutter: stable; -webkit-text-size-adjust: 100%; }
+  /* The page behind a modal doesn't scroll. */
+  html:has(dialog:modal) { overflow: hidden; }
+  body {
+    margin: 0;
+    background: var(--k-bg);
+    color: var(--k-text);
+    font: 0.9375rem/1.5 var(--k-font);
+    -webkit-font-smoothing: antialiased;
+  }
+  :where(.k-btn, .k-input, .k-tab, .k-nav-item, .k-sort, .k-day):focus-visible {
+    outline: 2px solid var(--k-accent);
+    outline-offset: 2px;
+  }
+  [data-tone='neutral'] { --k-tone: var(--k-muted); }
+  [data-tone='accent'] { --k-tone: var(--k-accent); }
+  [data-tone='success'] { --k-tone: var(--k-success); }
+  [data-tone='warning'] { --k-tone: var(--k-warning); }
+  [data-tone='danger'] { --k-tone: var(--k-danger); }
+  [data-tone='info'] { --k-tone: var(--k-info); }
+
+  /* Button */
+  .k-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    min-height: var(--k-control);
+    padding: 0 1rem;
+    border: 1px solid transparent;
+    border-radius: var(--k-radius);
+    background: none;
+    color: inherit;
+    font: 600 0.875rem/1 var(--k-font);
+    white-space: nowrap;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.15s, border-color 0.15s, scale 0.1s;
+  }
+  .k-btn:active { scale: 0.97; }
+  .k-btn:disabled { opacity: 0.45; cursor: not-allowed; scale: 1; }
+  .k-btn-primary { background: var(--k-accent); color: var(--k-on-accent); }
+  .k-btn-danger { background: var(--k-danger); color: var(--k-on-accent); }
+  .k-btn-primary:hover:enabled { background: color-mix(in oklab, var(--k-accent) 86%, var(--k-text)); }
+  .k-btn-danger:hover:enabled { background: color-mix(in oklab, var(--k-danger) 86%, var(--k-text)); }
+  .k-btn-secondary { background: var(--k-surface); border-color: var(--k-border-strong); }
+  .k-btn-secondary:hover:enabled { background: var(--k-sunken); }
+  .k-btn-ghost:hover:enabled { background: color-mix(in oklab, currentColor 10%, transparent); }
+  .k-btn-icon { width: var(--k-control); padding: 0; font-size: 1.25rem; flex: none; }
+  .k-btn-block { width: 100%; }
+
+  /* Badge */
+  .k-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 99px;
+    background: color-mix(in oklab, var(--k-tone) 12%, var(--k-surface));
+    color: var(--k-tone);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .k-badge::before { content: ''; width: 0.375rem; height: 0.375rem; border-radius: 50%; background: currentColor; }
+
+  /* Card, Stat, Gauge */
+  .k-card {
+    background: var(--k-surface);
+    border: 1px solid var(--k-border);
+    border-radius: calc(var(--k-radius) + 0.25rem);
+    box-shadow: 0 1px 2px var(--k-shadow);
+  }
+  .k-empty { padding: 2rem; color: var(--k-muted); text-align: center; }
+  .k-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem 1.125rem;
+    /* The value sizes itself to the card, not the screen. */
+    container-type: inline-size;
+  }
+  .k-stat-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; min-height: 1.5rem; }
+  .k-stat-label { color: var(--k-muted); font-size: 0.8125rem; font-weight: 500; }
+  .k-stat-value, .k-gauge-value {
+    font-size: clamp(1.25rem, 15cqi, 1.75rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .k-stat-trend { display: flex; align-items: center; gap: 0.25rem; font-size: 0.8125rem; font-weight: 500; }
+  .k-stat-trend[data-direction='up'] { color: var(--k-success); }
+  .k-stat-trend[data-direction='down'] { color: var(--k-danger); }
+  .k-gauge { position: relative; width: min(100%, 8rem); align-self: center; }
+  .k-gauge svg { display: block; width: 100%; fill: none; stroke-width: 9; stroke-linecap: round; }
+  .k-gauge-track { stroke: var(--k-sunken); }
+  .k-gauge-fill { stroke: var(--k-tone); transition: stroke-dashoffset 0.6s var(--k-ease), stroke 0.3s; }
+  .k-gauge-value { position: absolute; inset: auto 0 0; text-align: center; font-size: clamp(1.125rem, 12cqi, 1.5rem); }
+  .k-siren { color: var(--k-danger); font-size: 1.25rem; animation: k-pulse 1.2s ease-in-out infinite; }
+
+  /* Field, Input, Textarea, Select */
+  .k-field { display: flex; flex-direction: column; gap: 0.375rem; min-width: 0; }
+  .k-label { font-size: 0.875rem; font-weight: 600; }
+  .k-required { margin-left: 0.125rem; color: var(--k-danger); }
+  .k-hint, .k-error { margin: 0; color: var(--k-muted); font-size: 0.8125rem; }
+  .k-error { display: flex; align-items: center; gap: 0.375rem; color: var(--k-danger); }
+  .k-input {
+    display: block;
+    width: 100%;
+    min-height: var(--k-control);
+    padding: 0 0.75rem;
+    border: 1px solid var(--k-border-strong);
+    border-radius: var(--k-radius);
+    background: var(--k-surface);
+    color: var(--k-text);
+    font: inherit;
+    transition: border-color 0.15s;
+  }
+  .k-input:hover { border-color: var(--k-text); }
+  .k-input:focus-visible { outline-offset: -1px; border-color: var(--k-accent); }
+  .k-input[aria-invalid='true'] { border-color: var(--k-danger); }
+  .k-input[data-empty] { color: var(--k-muted); }
+  .k-input option { background: var(--k-surface); color: var(--k-text); }
+  .k-textarea { min-height: 5rem; padding: 0.5rem 0.75rem; resize: vertical; }
+  .k-select { position: relative; display: block; min-width: 0; }
+  .k-select select { appearance: none; padding-right: 2.25rem; text-overflow: ellipsis; cursor: pointer; }
+  .k-select > svg { position: absolute; top: 50%; right: 0.75rem; translate: 0 -50%; color: var(--k-muted); pointer-events: none; }
+  /* iOS zooms the page when a focused control's text is under 16px. */
+  @media (max-width: 767px) { .k-input { font-size: 1rem; } }
+
+  /* DatePicker */
+  .k-date { position: relative; }
+  .k-date-trigger { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; text-align: start; cursor: pointer; }
+  .k-date-trigger > svg { color: var(--k-muted); font-size: 1.125rem; flex: none; }
+  .k-popover {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 0.375rem);
+    left: 0;
+    padding: 0.75rem;
+    background: var(--k-surface);
+    border: 1px solid var(--k-border);
+    border-radius: calc(var(--k-radius) + 0.25rem);
+    box-shadow: 0 12px 32px -8px var(--k-shadow), 0 4px 8px var(--k-shadow);
+    transition: opacity 0.15s, translate 0.15s var(--k-ease);
+    @starting-style { opacity: 0; translate: 0 -0.25rem; }
+  }
+  .k-popover[data-above] { top: auto; bottom: calc(100% + 0.375rem); }
+  .k-calendar-head, .k-calendar-foot { display: flex; align-items: center; justify-content: space-between; font-weight: 600; }
+  .k-calendar-foot { margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--k-border); }
+  .k-calendar-grid { display: grid; grid-template-columns: repeat(7, var(--k-day)); }
+  .k-calendar-grid > span { padding: 0.375rem 0; color: var(--k-muted); font-size: 0.75rem; font-weight: 500; text-align: center; }
+  .k-day {
+    height: var(--k-day);
+    padding: 0;
+    border: 0;
+    border-radius: 99px;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+  }
+  .k-day:hover:enabled { background: var(--k-sunken); }
+  .k-day[data-outside] { color: var(--k-muted); }
+  .k-day:disabled { opacity: 0.35; cursor: not-allowed; }
+  .k-day[aria-current='date'] { box-shadow: inset 0 0 0 1px var(--k-border-strong); font-weight: 700; }
+  .k-day[aria-pressed='true'] { background: var(--k-accent); color: var(--k-on-accent); font-weight: 700; }
+
+  /* Tabs */
+  .k-tablist { display: flex; gap: 0.25rem; margin-bottom: 1rem; box-shadow: inset 0 -1px var(--k-border); }
+  .k-tab {
+    position: relative;
+    min-width: 0;
+    min-height: var(--k-control);
+    padding: 0 0.875rem;
+    border: 0;
+    border-radius: var(--k-radius) var(--k-radius) 0 0;
+    background: none;
+    color: var(--k-muted);
+    font: 600 0.875rem/1 var(--k-font);
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .k-tab::after {
+    content: '';
+    position: absolute;
+    inset: auto 0.5rem 0;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--k-accent);
+    scale: 0 1;
+    transition: scale 0.25s var(--k-ease);
+  }
+  .k-tab:hover, .k-tab[aria-selected='true'] { color: var(--k-text); }
+  .k-tab[aria-selected='true']::after { scale: 1; }
+  @media (max-width: 767px) { .k-tab { flex: 1; } }
+
+  /* DataTable */
+  .k-table-wrap { overflow-x: auto; }
+  .k-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  .k-table th {
+    padding: 0.625rem 1rem;
+    background: var(--k-sunken);
+    color: var(--k-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-align: start;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .k-table td { padding: 0.75rem 1rem; border-top: 1px solid var(--k-border); }
+  .k-table tbody tr { transition: background-color 0.1s; }
+  .k-table tbody tr:hover { background: color-mix(in oklab, var(--k-sunken) 60%, transparent); }
+  .k-table .k-num, .k-row-card dd { text-align: end; font-variant-numeric: tabular-nums; }
+  .k-sort {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: -0.25rem -0.375rem;
+    padding: 0.25rem 0.375rem;
+    border: 0;
+    border-radius: 0.375rem;
+    background: none;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    cursor: pointer;
+  }
+  .k-sort:hover, .k-sort[data-active] { color: var(--k-text); }
+  .k-sort > svg { font-size: 0.875rem; opacity: 0.6; }
+  .k-sort[data-active] > svg { color: var(--k-accent); opacity: 1; }
+  .k-cards, .k-cards-list { display: flex; flex-direction: column; gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+  .k-cards-sort { display: flex; gap: 0.5rem; }
+  .k-cards-sort .k-select { flex: 1; }
+  .k-row-card { padding: 0.875rem 1rem; }
+  .k-row-title { margin-bottom: 0.5rem; font-weight: 600; }
+  .k-row-card dl { display: grid; gap: 0.375rem; margin: 0; font-size: 0.875rem; }
+  .k-row-card dl > div { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .k-row-card dt { color: var(--k-muted); }
+  .k-row-card dd { margin: 0; }
+
+  /* Dialog and Drawer. Open and close are animated in CSS alone:
+     @starting-style for the way in, allow-discrete for the way out. */
+  .k-dialog, .k-drawer {
+    max-width: none;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    overflow: visible;
+    transition: opacity 0.2s, translate 0.25s var(--k-ease), scale 0.25s var(--k-ease), overlay 0.25s allow-discrete, display 0.25s allow-discrete;
+  }
+  .k-dialog::backdrop, .k-drawer::backdrop {
+    background: var(--k-scrim);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.25s, overlay 0.25s allow-discrete, display 0.25s allow-discrete;
+  }
+  .k-dialog[open]::backdrop, .k-drawer[open]::backdrop {
+    opacity: 1;
+    @starting-style { opacity: 0; }
+  }
+  .k-dialog { width: min(28rem, 100vw - 2rem); opacity: 0; translate: 0 0.75rem; scale: 0.98; }
+  .k-dialog[open] {
+    opacity: 1;
+    translate: 0;
+    scale: 1;
+    @starting-style { opacity: 0; translate: 0 0.75rem; scale: 0.98; }
+  }
+  .k-dialog-body {
+    padding: 1.5rem;
+    background: var(--k-surface);
+    border: 1px solid var(--k-border);
+    border-radius: 1rem;
+    box-shadow: 0 24px 48px -12px var(--k-shadow), 0 8px 16px var(--k-shadow);
+  }
+  .k-dialog-title { margin: 0 0 0.5rem; font-size: 1.125rem; font-weight: 700; line-height: 1.3; }
+  .k-dialog-content { color: var(--k-muted); }
+  .k-dialog-footer { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1.5rem; }
+  @media (max-width: 767px) {
+    /* A bottom sheet, clear of the home indicator. */
+    .k-dialog { width: 100%; margin: auto 0 0; translate: 0 100%; scale: 1; }
+    .k-dialog[open] { @starting-style { translate: 0 100%; scale: 1; } }
+    .k-dialog-body { padding-bottom: calc(1.25rem + env(safe-area-inset-bottom)); border-width: 1px 0 0; border-radius: 1rem 1rem 0 0; }
+    .k-dialog-footer { flex-direction: column-reverse; }
+  }
+  .k-drawer { width: min(20rem, 85vw); height: 100dvh; margin: 0; translate: -100% 0; }
+  .k-drawer[data-side='right'] { margin-left: auto; translate: 100% 0; }
+  .k-drawer[open] {
+    translate: 0;
+    @starting-style { translate: -100% 0; }
+  }
+  .k-drawer[data-side='right'][open] { @starting-style { translate: 100% 0; } }
+  .k-drawer-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: 100%;
+    padding: 0.5rem 0.75rem calc(0.75rem + env(safe-area-inset-bottom));
+    background: var(--k-surface);
+    box-shadow: 0 0 48px var(--k-shadow);
+    overflow-y: auto;
+  }
+  .k-drawer-head { display: flex; align-items: center; justify-content: space-between; padding-left: 0.5rem; }
+
+  /* AppBar and NavList */
+  .k-appbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in oklab, var(--k-surface) 82%, transparent);
+    border-bottom: 1px solid var(--k-border);
+    backdrop-filter: blur(12px) saturate(1.6);
+  }
+  .k-appbar-inner { display: flex; align-items: center; gap: 1.5rem; max-width: 80rem; min-height: 3.5rem; margin: 0 auto; padding: 0 1.5rem; }
+  .k-appbar-actions { display: flex; gap: 0.25rem; margin-left: auto; }
+  .k-brand { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 1.0625rem; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
+  .k-brand-mark { color: var(--k-accent); font-size: 1.25em; line-height: 1; }
+  .k-nav { display: flex; gap: 0.25rem; }
+  .k-nav[data-direction='column'] { flex-direction: column; }
+  .k-nav-item {
+    min-height: var(--k-control);
+    padding: 0 0.75rem;
+    border: 0;
+    border-radius: var(--k-radius);
+    background: none;
+    color: var(--k-muted);
+    font: 600 0.875rem/1 var(--k-font);
+    text-align: start;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+  }
+  .k-nav-item:hover { background: var(--k-sunken); color: var(--k-text); }
+  .k-nav-item[aria-current='page'] { background: color-mix(in oklab, var(--k-accent) 12%, transparent); color: var(--k-accent); }
+  @media (max-width: 767px) {
+    .k-appbar-inner { padding: 0 0.5rem 0 1rem; }
+    .k-nav-item { font-size: 1rem; }
+  }
+
+  /* Toaster */
+  .k-toaster {
+    position: fixed;
+    z-index: 50;
+    right: 1rem;
+    bottom: calc(1rem + env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: min(23rem, 100vw - 2rem);
+    pointer-events: none;
+  }
+  .k-toast {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.75rem;
+    background: var(--k-surface);
+    border: 1px solid var(--k-border);
+    border-radius: calc(var(--k-radius) + 0.125rem);
+    box-shadow: 0 12px 32px -8px var(--k-shadow), 0 4px 8px var(--k-shadow);
+    font-size: 0.875rem;
+    overflow: hidden;
+    pointer-events: auto;
+    transition: opacity 0.25s, translate 0.3s var(--k-ease);
+    @starting-style { opacity: 0; translate: 0 1rem; }
+  }
+  .k-toast-icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--k-tone) 14%, var(--k-surface));
+    color: var(--k-tone);
+    font-size: 1.0625rem;
+  }
+  .k-toast-text { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+  .k-toast-text > span { color: var(--k-muted); }
+  .k-toast-bar { position: absolute; inset: auto 0 0; height: 3px; background: var(--k-tone); transform-origin: left; animation: k-shrink linear forwards; }
+
+  @keyframes k-shrink { to { transform: scaleX(0); } }
+  @keyframes k-pulse { 50% { opacity: 0.35; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where([class*='k-']), :where([class*='k-'])::before, :where([class*='k-'])::after, :where([class*='k-'])::backdrop {
+      transition-duration: 0.01ms !important;
+      animation: none !important;
+    }
+  }
+}

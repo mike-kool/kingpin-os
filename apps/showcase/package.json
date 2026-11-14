@@ -12,6 +12,7 @@
   "dependencies": {
     "@kingpin/page": "workspace:*",
     "@kingpin/shared": "workspace:*",
+    "@kingpin/ui-custom": "workspace:*",
     "@kingpin/ui-chakra": "workspace:*",
     "@kingpin/ui-daisyui": "workspace:*",
     "@kingpin/ui-heroui": "workspace:*",
