@@ -190,6 +190,8 @@ export const LIBRARIES = [
   { id: 'chakra', name: 'Chakra UI' },
   { id: 'daisyui', name: 'DaisyUI' },
   { id: 'heroui', name: 'HeroUI' },
+  // The control: the same contract with no UI library at all.
+  { id: 'custom', name: 'No library' },
 ] as const;
 
 export type LibraryId = (typeof LIBRARIES)[number]['id'];

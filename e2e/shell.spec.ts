@@ -141,7 +141,7 @@ test.describe('stats badges', () => {
   test('show build-time numbers for every library', async ({ page, request }) => {
     const stats = await (await request.get('/stats.json')).json();
     const names: Record<string, string> = {
-      shadcn: 'shadcn/ui', mui: 'MUI', mantine: 'Mantine', chakra: 'Chakra UI', daisyui: 'DaisyUI', heroui: 'HeroUI',
+      shadcn: 'shadcn/ui', mui: 'MUI', mantine: 'Mantine', chakra: 'Chakra UI', daisyui: 'DaisyUI', heroui: 'HeroUI', custom: 'No library',
     };
     await page.goto('/');
     for (const [id, name] of Object.entries(names)) {

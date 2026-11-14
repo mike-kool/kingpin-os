@@ -113,7 +113,7 @@ export function App() {
               <span className="shell-logo" aria-hidden="true">♛</span>
               <div>
                 <h1>Kingpin OS</h1>
-                <p>One app, six UI libraries</p>
+                <p>One app, six UI libraries and one without</p>
               </div>
             </div>
 

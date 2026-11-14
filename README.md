@@ -2,7 +2,9 @@
 
 One satirical back-office dashboard, built six times in six React UI libraries
 (shadcn/ui, MUI, Mantine, Chakra UI, DaisyUI, HeroUI), so you can compare look,
-feel, mobile behavior and cost side by side.
+feel, mobile behavior and cost side by side. A seventh version uses no UI
+library at all, as the control: `packages/ui-custom`, a small hand-written
+component kit that other projects can use too (see its README).
 
 Everything in the demo is invented: names, places, products and numbers.
 
@@ -18,7 +20,8 @@ scripts/measure     gzipped bundle size, lines of code, hand-built count -> stat
 ```
 
 All six libraries are in: `packages/ui-shadcn`, `ui-mui`, `ui-mantine`,
-`ui-chakra`, `ui-heroui` and `ui-daisyui`.
+`ui-chakra`, `ui-heroui` and `ui-daisyui`. `packages/ui-custom` is the
+no-library version.
 
 ## Adding a library
 
