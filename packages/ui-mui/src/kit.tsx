@@ -428,10 +428,10 @@ function Modal({ open, title, children, confirmLabel, cancelLabel, onConfirm, on
         <DialogContentText>{children}</DialogContentText>
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 2 }}>
-        <MuiButton onClick={onCancel} sx={touch}>
+        <MuiButton variant="outlined" onClick={onCancel} sx={{ ...touch, flex: { xs: 1, sm: 'initial' } }}>
           {cancelLabel}
         </MuiButton>
-        <MuiButton variant="contained" onClick={onConfirm} sx={touch}>
+        <MuiButton variant="contained" onClick={onConfirm} sx={{ ...touch, flex: { xs: 1, sm: 'initial' } }}>
           {confirmLabel}
         </MuiButton>
       </DialogActions>

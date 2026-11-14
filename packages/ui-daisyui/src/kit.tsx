@@ -47,6 +47,13 @@ function useIsMobile() {
 function AppShell({ title, nav, activeNavId, onNavigate, children }: AppShellProps) {
   const [open, setOpen] = useState(false);
   const drawerId = useId();
+  // DaisyUI's drawer is CSS only, so Escape-to-close is ours.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open]);
   return (
     <div className="drawer">
       <input
@@ -187,8 +194,8 @@ function DataTable<Row>({ caption, columns, rows, getRowId, sort, onSortChange }
         </select>
         <ul aria-label={caption} className="m-0 flex list-none flex-col gap-3 p-0">
           {rows.map((row) => (
-            <li key={getRowId(row)} className="card card-border card-sm bg-base-100">
-              <div className="card-body">
+            <li key={getRowId(row)} className="card card-border bg-base-100">
+              <div className="card-body gap-0 p-4 text-sm">
                 {primary && <div className="mb-1.5 font-semibold">{primary.render(row)}</div>}
                 <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
                   {rest.map((col) => (

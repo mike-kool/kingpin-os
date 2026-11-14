@@ -121,6 +121,32 @@ for (const lib of LIBS) {
         await expect(page.getByRole('list', { name: 'Crew' }).getByRole('listitem')).toHaveCount(40);
       });
 
+      test('form is a single column', async ({ page }) => {
+        const form = page.locator('form');
+        await form.scrollIntoViewIfNeeded();
+        const formBox = (await form.boundingBox())!;
+        for (const name of ['Codename', 'Alibi']) {
+          const box = (await page.getByRole('textbox', { name }).boundingBox())!;
+          // Each field spans the form's width, so nothing sits beside it.
+          expect(box.width, name).toBeGreaterThan(formBox.width * 0.9);
+        }
+      });
+
+      test('modal is full width', async ({ page }) => {
+        await page.getByRole('button', { name: 'Expand territory' }).click();
+        const dialog = page.getByRole('dialog', { name: 'Confirm Territory Expansion' });
+        await expect(dialog).toBeVisible();
+        await page.waitForTimeout(400); // let open animations settle
+        const width = await page.evaluate(() => window.innerWidth);
+        const box = (await dialog.boundingBox())!;
+        // Edge to edge, allowing up to a 24px gutter on each side.
+        expect(box.width).toBeGreaterThanOrEqual(width - 48);
+        for (const name of ['Expand', 'Cancel']) {
+          const button = (await dialog.getByRole('button', { name, exact: true }).boundingBox())!;
+          expect(button.height, name).toBeGreaterThanOrEqual(44);
+        }
+      });
+
       test('touch targets are at least 44px and nothing scrolls sideways', async ({ page }) => {
         const small = await page.evaluate(() =>
           [...document.querySelectorAll('button, a, [role=tab], [role=combobox], input, textarea, select')]

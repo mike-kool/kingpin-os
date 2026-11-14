@@ -7,5 +7,7 @@
   }
   .mantine-Button-root {
     --button-height-md: 2.75rem;
+    /* Keep two buttons side by side on a 390px screen without clipping. */
+    --button-padding-x-md: 0.75rem;
   }
 }
