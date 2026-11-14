@@ -1,0 +1,25 @@
+/* HeroUI v3 on Tailwind v4: the default theme, untouched. Loaded only by
+   the HeroUI page, so its Tailwind build sees only these sources. */
+
+@import "tailwindcss";
+@import "@heroui/styles";
+@import "@kingpin/page/page.css";
+
+@source "./";
+@source "../../page/src/";
+
+/* HeroUI sizes most controls 36 to 40px. On phones, lift every touch
+   target to 44px. */
+@media (width < 48rem) {
+  .button,
+  .input,
+  .select__trigger,
+  .date-input-group,
+  .tabs__tab {
+    min-height: 2.75rem;
+  }
+  .date-picker__trigger {
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+  }
+}

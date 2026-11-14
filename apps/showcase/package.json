@@ -13,6 +13,7 @@
     "@kingpin/page": "workspace:*",
     "@kingpin/shared": "workspace:*",
     "@kingpin/ui-chakra": "workspace:*",
+    "@kingpin/ui-heroui": "workspace:*",
     "@kingpin/ui-mantine": "workspace:*",
     "@kingpin/ui-mui": "workspace:*",
     "@kingpin/ui-shadcn": "workspace:*",
