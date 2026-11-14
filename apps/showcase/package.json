@@ -12,6 +12,7 @@
   "dependencies": {
     "@kingpin/page": "workspace:*",
     "@kingpin/shared": "workspace:*",
+    "@kingpin/ui-mantine": "workspace:*",
     "@kingpin/ui-mui": "workspace:*",
     "@kingpin/ui-shadcn": "workspace:*",
     "react": "^19.3.1",

@@ -3,10 +3,11 @@
 
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
-const LIBS = ['shadcn', 'mui'] as const;
+const LIBS = ['shadcn', 'mui', 'mantine'] as const;
 
 async function pickOption(page: Page, label: string, option: string) {
-  const field = page.getByLabel(label);
+  // Some libraries label their listbox too, so target the combobox itself.
+  const field = page.getByRole('combobox', { name: label, exact: true });
   if ((await field.evaluate((el) => el.tagName)) === 'SELECT') {
     await field.selectOption({ label: option });
   } else {
