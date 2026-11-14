@@ -102,7 +102,13 @@ test.describe('stats badges', () => {
     await expect(badges).toContainText(`${shadcn.linesOfCode.toLocaleString('en-US')} lines of code`);
     await expect(badges).toContainText(`${shadcn.fromLibrary} from library`);
 
-    await page.getByRole('button', { name: 'MUI' }).click();
+    // A library without a kit yet shows a note instead of numbers.
+    const names: Record<string, string> = {
+      mui: 'MUI', mantine: 'Mantine', chakra: 'Chakra UI', daisyui: 'DaisyUI', heroui: 'HeroUI',
+    };
+    const standIn = Object.keys(names).find((id) => !stats.libraries[id]);
+    test.skip(!standIn, 'every library is built');
+    await page.getByRole('button', { name: names[standIn!], exact: true }).click();
     await expect(page.getByTestId('badges')).toHaveCount(0);
     await expect(page.getByTestId('badges-empty')).toContainText('still a stand-in');
   });
