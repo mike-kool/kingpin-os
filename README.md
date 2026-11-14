@@ -17,8 +17,19 @@ packages/ui-*       one package per library implementing the contract
 scripts/measure     gzipped bundle size, lines of code, hand-built count -> stats.json
 ```
 
-So far: `packages/shared`, the shell, and stand-in library pages. The real
-library versions land step by step.
+So far: `packages/shared`, `packages/page`, the shell, and the shadcn/ui
+version (`packages/ui-shadcn`). The other five libraries show stand-in pages
+until their kits land.
+
+## Adding a library
+
+1. Create `packages/ui-<id>` exporting a `Kit` (all 12 contract components
+   from `@kingpin/shared`) and a `manifest` marking each as `library` or
+   `hand-built`.
+2. Point `apps/showcase/src/entries/<id>.tsx` at `KingpinPage` with that kit
+   and the library's styles.
+3. Add the id to `LIBS` in `e2e/page.spec.ts`; the shared behavior tests then
+   run against it at desktop and phone sizes.
 
 ## Develop
 
