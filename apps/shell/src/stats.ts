@@ -1,5 +1,5 @@
-// Per-library numbers written by scripts/measure at build time. Until that
-// script exists (next step) the file is absent and the badges stay hidden.
+// Per-library numbers written to dist/stats.json by scripts/measure at build
+// time. In `pnpm dev` the file doesn't exist, so the badges stay hidden.
 
 import { useEffect, useState } from 'react';
 import type { LibraryId } from '@kingpin/shared';
@@ -34,5 +34,5 @@ export function useStats(): StatsFile | null {
 }
 
 export function formatKb(bytes: number): string {
-  return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / 1024).toFixed(1)} KB`; // KiB, gzipped
 }

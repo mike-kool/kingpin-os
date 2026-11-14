@@ -95,7 +95,7 @@ export function App() {
       </header>
 
       <div className="shell-meta">
-        <Badges stats={libStats} />
+        <Badges stats={libStats} statsReady={stats !== null} />
         <a className="shell-source" href={sourceUrl(state.lib)} target="_blank" rel="noreferrer">
           View {libName} source
         </a>
@@ -196,21 +196,27 @@ function DevicePicker({ value, onChange }: { value: string; onChange: (id: strin
   );
 }
 
-function Badges({ stats }: { stats: LibraryStats | undefined }) {
-  if (!stats) return <div className="badges" data-testid="badges-empty" />;
+function Badges({ stats, statsReady }: { stats: LibraryStats | undefined; statsReady: boolean }) {
+  if (!stats) {
+    return (
+      <p className="badges-empty" data-testid="badges-empty">
+        {statsReady ? 'This library is still a stand-in. Its numbers appear once it is built.' : ''}
+      </p>
+    );
+  }
   return (
-    <ul className="badges" data-testid="badges">
-      <li>
-        <b>{formatKb(stats.jsGzip)}</b> JS gzip
+    <ul className="badges" data-testid="badges" aria-label="Measured at build time">
+      <li title="Gzipped JavaScript this page loads, React included">
+        <b>{formatKb(stats.jsGzip)}</b> JS
       </li>
-      <li>
-        <b>{formatKb(stats.cssGzip)}</b> CSS gzip
+      <li title="Gzipped CSS this page loads">
+        <b>{formatKb(stats.cssGzip)}</b> CSS
       </li>
-      <li>
-        <b>{stats.linesOfCode.toLocaleString()}</b> lines of code
+      <li title="Non-blank, non-comment lines in this library's kit package">
+        <b>{stats.linesOfCode.toLocaleString('en-US')}</b> lines of code
       </li>
-      <li>
-        <b>{stats.handBuilt}</b> hand-built, <b>{stats.fromLibrary}</b> from library
+      <li title="Of the 12 components every library implements">
+        <b>{stats.fromLibrary}</b> from library · <b>{stats.handBuilt}</b> hand-built
       </li>
     </ul>
   );

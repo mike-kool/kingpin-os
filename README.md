@@ -41,10 +41,25 @@ pnpm dev          # shell on http://localhost:5173, library pages proxied from :
 pnpm lint
 pnpm typecheck
 pnpm test
-pnpm build        # shell and all library pages into dist/
+pnpm build        # shell and all library pages into dist/, then dist/stats.json
 pnpm e2e          # Playwright against the built site
 ```
 
 The shell keeps its state in the URL, e.g.
 `/?lib=mui&tab=rivals&view=both&device=pixel-10`. The phone picker lists five
 iPhones and five Android phones; sizes are in `apps/shell/src/devices.ts`.
+
+## Stats badges
+
+`pnpm build` ends with `scripts/measure`, which writes `dist/stats.json` for
+every library that has a `packages/ui-<id>` kit:
+
+- **JS / CSS**: gzipped size of every file the library's page loads up front
+  (React and the shared page code included, so totals compare what a visitor
+  downloads). Read from Vite's build manifest.
+- **Lines of code**: non-blank, non-comment lines of TS, TSX and CSS in the
+  kit package. For shadcn/ui this includes the copied component sources.
+- **From library / hand-built**: counted from the kit's `manifest.ts`.
+
+The shell reads the file at runtime; libraries without a kit show a note
+instead of numbers.
