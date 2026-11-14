@@ -86,3 +86,24 @@ test.describe('shell on a real phone', () => {
     expect(overflow).toBeLessThanOrEqual(0);
   });
 });
+
+test.describe('stats badges', () => {
+  test.skip(({ isMobile }) => isMobile, 'desktop only');
+
+  test('show build-time numbers for a built library and a note for stand-ins', async ({ page, request }) => {
+    const stats = await (await request.get('/stats.json')).json();
+    const shadcn = stats.libraries.shadcn;
+    expect(shadcn.jsGzip).toBeGreaterThan(0);
+    expect(shadcn.handBuilt + shadcn.fromLibrary).toBe(12);
+
+    await page.goto('/?lib=shadcn');
+    const badges = page.getByTestId('badges');
+    await expect(badges).toContainText(`${(shadcn.jsGzip / 1024).toFixed(1)} KB`);
+    await expect(badges).toContainText(`${shadcn.linesOfCode.toLocaleString('en-US')} lines of code`);
+    await expect(badges).toContainText(`${shadcn.fromLibrary} from library`);
+
+    await page.getByRole('button', { name: 'MUI' }).click();
+    await expect(page.getByTestId('badges')).toHaveCount(0);
+    await expect(page.getByTestId('badges-empty')).toContainText('still a stand-in');
+  });
+});

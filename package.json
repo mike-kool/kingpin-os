@@ -3,15 +3,18 @@
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.28.0",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "pnpm --parallel --filter @kingpin/shell --filter @kingpin/showcase dev",
-    "build": "pnpm --filter @kingpin/shell build && pnpm --filter @kingpin/showcase build",
+    "build": "pnpm --filter @kingpin/shell build && pnpm --filter @kingpin/showcase build && pnpm --filter @kingpin/measure measure",
     "preview": "pnpm --filter @kingpin/shell preview",
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint .",
     "test": "pnpm -r test",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "measure": "pnpm --filter @kingpin/measure measure"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -1,0 +1,14 @@
+{
+  "name": "@kingpin/measure",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "bin": { "kingpin-measure": "./measure.mjs" },
+  "scripts": {
+    "measure": "node measure.mjs",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^5.1.0"
+  }
+}

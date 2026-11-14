@@ -24,6 +24,8 @@ export default defineConfig(({ command }) => ({
   build: {
     outDir: '../../dist',
     emptyOutDir: false,
+    // Read by scripts/measure to find each page's files; deleted after.
+    manifest: '.vite/showcase-manifest.json',
     rollupOptions: { input: entries },
   },
 }));
